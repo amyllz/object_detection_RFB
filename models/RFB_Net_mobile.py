@@ -273,7 +273,6 @@ def MobileNet():
     layers += [conv_dw(512, 512, 1)]
     layers += [conv_dw(512, 512, 1)]
     layers += [conv_dw(512, 512, 1)]
-    layers += [conv_dw(512, 512, 1)]
     layers += [conv_dw(512, 1024, 2)]
     layers += [conv_dw(1024, 1024, 1)]
 
@@ -336,7 +335,9 @@ def multibox(size, base, extra_layers, cfg, num_classes):
         return
 
     for k, v in enumerate(extra_layers):
+        print('multibox', k, v)
         if k < indicator or k%2== 0:
+            print('multibox_in', indicator, k, v, v.out_channels, cfg[i])
             loc_layers += [nn.Conv2d(v.out_channels, cfg[i]
                                  * 4, kernel_size=1, padding=0)]
             conf_layers += [nn.Conv2d(v.out_channels, cfg[i]
