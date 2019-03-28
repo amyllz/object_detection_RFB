@@ -60,7 +60,7 @@ if not os.path.exists(args.save_folder):
     os.mkdir(args.save_folder)
 
 if args.dataset == 'VOC':
-    train_sets = [('2007', 'trainval'), ('2012', 'trainval')]
+    train_sets = [('2007', 'trainval')]
     cfg = (VOC_300, VOC_512)[args.size == '512']
 else:
     train_sets = [('2014', 'train'),('2014', 'valminusminival')]

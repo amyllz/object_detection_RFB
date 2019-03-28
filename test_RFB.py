@@ -25,7 +25,7 @@ parser.add_argument('-s', '--size', default='300',
                     help='300 or 512 input size.')
 parser.add_argument('-d', '--dataset', default='VOC',
                     help='VOC or COCO version')
-parser.add_argument('-m', '--trained_model', default='weights/RFB300_80_5.pth',
+parser.add_argument('-m', '--trained_model', default='weights/RFBNet300_80_7.pth',
                     type=str, help='Trained state_dict file path to open')
 parser.add_argument('--save_folder', default='eval/', type=str,
                     help='Dir to save results')
@@ -148,7 +148,6 @@ if __name__ == '__main__':
     img_dim = (300,512)[args.size=='512']
     num_classes = (21, 81)[args.dataset == 'COCO']
     net = build_net('test', img_dim, num_classes)    # initialize detector
-
     state_dict = torch.load(args.trained_model)
     # create new OrderedDict that does not contain `module.`
 
@@ -162,9 +161,16 @@ if __name__ == '__main__':
             name = k
         new_state_dict[name] = v
     net.load_state_dict(new_state_dict)
+   # from visualize import  make_dot
+   # g = make_dot(net)
+   # net.view()
     net.eval()
     print('Finished loading model!')
     print(net)
+    #print(net.base[1])
+    #from torchsummary import summary
+    #train_label = torch.from_numpy((3,300,300))
+    #summary(net,train_label.cuda())
     # load data
     if args.dataset == 'VOC':
         testset = VOCDetection(
