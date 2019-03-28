@@ -285,6 +285,7 @@ def add_extras(size, cfg, i, batch_norm=False):
     in_channels = i
     flag = False
     for k, v in enumerate(cfg):
+        print('add_extras_k_v_inChannel_cfg', k, v, i, cfg)
         if in_channels != 'S':
             if v == 'S':
                 layers += [BasicRFB(in_channels, cfg[k+1], stride=2, scale = 1.0)]
@@ -314,11 +315,13 @@ def multibox(size, base, extra_layers, cfg, num_classes):
     base_net= [-2,-1]
     for k, v in enumerate(base_net):
         if k == 0:
+            print('multibox_k==0_512',k,v)
             loc_layers += [nn.Conv2d(512,
                                  cfg[k] * 4, kernel_size=1, padding=0)]
             conf_layers +=[nn.Conv2d(512,
                                  cfg[k] * num_classes, kernel_size=1, padding=0)]
         else:
+            print('multibox_1024', k, v)
             loc_layers += [nn.Conv2d(1024,
                                  cfg[k] * 4, kernel_size=1, padding=0)]
             conf_layers += [nn.Conv2d(1024,
@@ -355,9 +358,9 @@ def build_net(phase, size=300, num_classes=21):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # PyTorch v0.4.0
     #model = RFBNet()
     print('devide - ',device)
-    # summary(RFBNet(phase, size, *multibox(size, MobileNet(),
-    #                             add_extras(size, extras[str(size)], 1024),
-    #                             mbox[str(size)], num_classes), num_classes).to(device),(3,300,300))
+    summary(RFBNet(phase, size, *multibox(size, MobileNet(),
+                                add_extras(size, extras[str(size)], 1024),
+                                mbox[str(size)], num_classes), num_classes).to(device),(3,300,300))
     # flops, params = profile(RFBNet(phase, size, *multibox(size, MobileNet(),
     #                             add_extras(size, extras[str(size)], 1024),
     #                             mbox[str(size)], num_classes), num_classes).to(device), input_size=(1, 3, 300,300))
