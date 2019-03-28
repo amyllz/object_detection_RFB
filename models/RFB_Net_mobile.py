@@ -273,6 +273,7 @@ def MobileNet():
     layers += [conv_dw(512, 512, 1)]
     layers += [conv_dw(512, 512, 1)]
     layers += [conv_dw(512, 512, 1)]
+    layers += [conv_dw(512, 512, 1)]
     layers += [conv_dw(512, 1024, 2)]
     layers += [conv_dw(1024, 1024, 1)]
 
