@@ -341,13 +341,13 @@ def build_net(phase, size=300, num_classes=21):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # PyTorch v0.4.0
     #model = RFBNet()
     print('devide - ',device)
-    summary(RFBNet(phase, size, *multibox(size, MobileNet(),
-                                add_extras(size, extras[str(size)], 1024),
-                                mbox[str(size)], num_classes), num_classes).to(device),(3,300,300))
-    flops, params = profile(RFBNet(phase, size, *multibox(size, MobileNet(),
-                                add_extras(size, extras[str(size)], 1024),
-                                mbox[str(size)], num_classes), num_classes).to(device), input_size=(1, 3, 300,300))
-    print('flops - ',flops)
+    # summary(RFBNet(phase, size, *multibox(size, MobileNet(),
+    #                             add_extras(size, extras[str(size)], 1024),
+    #                             mbox[str(size)], num_classes), num_classes).to(device),(3,300,300))
+    # flops, params = profile(RFBNet(phase, size, *multibox(size, MobileNet(),
+    #                             add_extras(size, extras[str(size)], 1024),
+    #                             mbox[str(size)], num_classes), num_classes).to(device), input_size=(1, 3, 300,300))
+    # print('flops - ',flops)
     return RFBNet(phase, size, *multibox(size, MobileNet(),
                                 add_extras(size, extras[str(size)], 1024),
                                 mbox[str(size)], num_classes), num_classes)
