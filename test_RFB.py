@@ -161,16 +161,9 @@ if __name__ == '__main__':
             name = k
         new_state_dict[name] = v
     net.load_state_dict(new_state_dict)
-   # from visualize import  make_dot
-   # g = make_dot(net)
-   # net.view()
     net.eval()
     print('Finished loading model!')
     print(net)
-    #print(net.base[1])
-    #from torchsummary import summary
-    #train_label = torch.from_numpy((3,300,300))
-    #summary(net,train_label.cuda())
     # load data
     if args.dataset == 'VOC':
         testset = VOCDetection(
