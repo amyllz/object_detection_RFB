@@ -88,9 +88,9 @@ momentum = 0.9
 net = build_net('train', img_dim, num_classes)
 print(net)
 if args.resume_net == None:
-    base_weights = torch.load(args.basenet)
-    print('Loading base network...')
-    net.base.load_state_dict(base_weights)
+    # base_weights = torch.load(args.basenet)
+    # print('Loading base network...')
+    # net.base.load_state_dict(base_weights)
 
     def xavier(param):
         init.xavier_uniform(param)
@@ -107,6 +107,7 @@ if args.resume_net == None:
 
     print('Initializing weights...')
 # initialize newly added layers' weights with kaiming_normal method
+    net.base.apply(weights_init)
     net.extras.apply(weights_init)
     net.loc.apply(weights_init)
     net.conf.apply(weights_init)
