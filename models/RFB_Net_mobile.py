@@ -9,6 +9,7 @@ import torch.backends.cudnn as cudnn
 import os
 from torchsummary import summary
 from thop import profile
+import torch.nn.init as init
 
 class BasicConv(nn.Module):
 
@@ -221,13 +222,24 @@ class RFBNet(nn.Module):
         return output
 
     def load_weights(self, base_file):
-        other, ext = os.path.splitext(base_file)
-        if ext == '.pkl' or '.pth':
-            print('Loading weights into state dict...')
-            self.load_state_dict(torch.load(base_file))
-            print('Finished!')
-        else:
-            print('Sorry only .pth and .pkl files supported.')
+        def weights_init(m):
+            for key in m.state_dict():
+                if key.split('.')[-1] == 'weight':
+                    if 'conv' in key:
+                        init.kaiming_normal_(m.state_dict()[key], mode='fan_out')
+                    if 'bn' in key:
+                        m.state_dict()[key][...] = 1
+                elif key.split('.')[-1] == 'bias':
+                    m.state_dict()[key][...] = 0
+        print('init weight')
+        self.apply(weights_init)
+        # other, ext = os.path.splitext(base_file)
+        # if ext == '.pkl' or '.pth':
+        #     print('Loading weights into state dict...')
+        #     self.load_state_dict(torch.load(base_file))
+        #     print('Finished!')
+        # else:
+        #     print('Sorry only .pth and .pkl files supported.')
 
 
 def conv_bn(inp,oup,stride):
@@ -342,13 +354,13 @@ def build_net(phase, size=300, num_classes=21):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # PyTorch v0.4.0
     #model = RFBNet()
     print('devide - ',device)
-    summary(RFBNet(phase, size, *multibox(size, MobileNet(),
-                                add_extras(size, extras[str(size)], 1024),
-                                mbox[str(size)], num_classes), num_classes).to(device),(3,300,300))
-    flops, params = profile(RFBNet(phase, size, *multibox(size, MobileNet(),
-                                add_extras(size, extras[str(size)], 1024),
-                                mbox[str(size)], num_classes), num_classes).to(device), input_size=(1, 3, 300,300))
-    print('flops - ',flops)
+    # summary(RFBNet(phase, size, *multibox(size, MobileNet(),
+    #                             add_extras(size, extras[str(size)], 1024),
+    #                             mbox[str(size)], num_classes), num_classes).to(device),(3,300,300))
+    # flops, params = profile(RFBNet(phase, size, *multibox(size, MobileNet(),
+    #                             add_extras(size, extras[str(size)], 1024),
+    #                             mbox[str(size)], num_classes), num_classes).to(device), input_size=(1, 3, 300,300))
+    # print('flops - ',flops)
     return RFBNet(phase, size, *multibox(size, MobileNet(),
                                 add_extras(size, extras[str(size)], 1024),
                                 mbox[str(size)], num_classes), num_classes)
