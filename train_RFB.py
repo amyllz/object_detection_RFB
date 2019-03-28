@@ -194,7 +194,7 @@ def train():
             loc_loss = 0
             conf_loss = 0
             if (epoch % 10 == 0 and epoch > 0) or (epoch % 5 ==0 and epoch > 200):
-                torch.save(net.state_dict(), args.save_folder+args.version+'_'+args.dataset + '_epoches_'+
+                torch.save(net.state_dict(), 'delete10_11_'+args.save_folder+args.version+'_'+args.dataset + '_epoches_'+
                            repr(epoch) + '.pth')
             epoch += 1
 
